@@ -50,5 +50,9 @@ This function automatically takes that information sent back, evaluates the oper
 # Gets the most recent 1000 tweets from  user "ChelseaFC"
 api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
 params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
-result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
+result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id'
+                                   , value_iteration_operation = 'min(id)-1'
+                                   , loops = 5
+                                   , api = api_1
+                                   , param_list = params_1)
 ```
