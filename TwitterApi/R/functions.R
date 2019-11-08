@@ -117,8 +117,8 @@ generic_api_call <- function(api = 'https://api.twitter.com/labs/1/users'
 #'
 #' @description
 #' Twitter has request limits for each API call.
-#' For example, you might want the most recent 1000 requests for a user, but the recent tweets by user API is limited at 200 tweets per request (see \url{https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline}{get-statuses-user_timeline})
-#' To help with this, after the first call is sent, twitter gives back some information that informs what parameter the next api call should use to retrieve the next set (e.g. for tweets 201-400, set the max_id parameter to the minimum id recieved minus 1).
+#' For example, you might want the most recent 1000 requests for a user, but the recent tweets by user API is limited at 200 tweets per request (see \href{https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline}{get-statuses-user_timeline})
+#' To help with this, after the first call is sent, twitter gives back some information that informs what parameter the next api call should use to retrieve the next set (e.g. for tweets 201-400, take the the minimum id recieved in the previous call minus one, and set the max_id parameter to that).
 #' This function automatically takes that information sent back, evaluates the operation specified for \code{value_iteration_operation} and applies that into the next API call under the key in \code{key_to_iterate_to}
 #'
 #' @param api String. The url of the API to call
@@ -146,12 +146,12 @@ generic_api_call <- function(api = 'https://api.twitter.com/labs/1/users'
 #'
 #' @details
 #' Twitter has specified custom functionality for 'pagination' that this function addresses.
-#' See  \url{https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines}{'working with timelines'} for more details
+#' See \href{https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines}{'working with timelines'} for more details
 #'
 #' @seealso
-#' \url{https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines}{Twitter pagination}
-#' \url{https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline}{Twitter recent tweets by user}
-#' \url{https://developer.twitter.com/en/docs/tweets/search/overview/premium}{Twitter premium search}
+#' \href{https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines}{Twitter pagination}
+#' \href{https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline}{Twitter recent tweets by user}
+#' \href{https://developer.twitter.com/en/docs/tweets/search/overview/premium}{Twitter premium search}
 #'
 #' @keywords twitter api call generic
 #'
@@ -163,7 +163,7 @@ generic_loop_api_call <- function(api = 'https://api.twitter.com/1.1/statuses/us
                                                       , tweet_mode = 'extended')
                                   , key_to_iterate_to = 'max_id'
                                   , value_iteration_operation = 'min(id)-1'
-                                  , loops = 1:16) {
+                                  , loops = 5) {
   result_list <- list()
   for(i in 1:loops) {
     result_list[[paste0('loop_',i)]] <- generic_api_call(api = api, param_list = param_list)
