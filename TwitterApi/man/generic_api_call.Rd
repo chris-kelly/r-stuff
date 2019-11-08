@@ -27,10 +27,9 @@ This function requires \code{\link{twitter_oauth2}} to be run first.
 }
 \examples{
 
-# (Examples not run due to need for authentication)
-
-# result <- generic_api_call(api = 'https://api.twitter.com/labs/1/users', param_list = list(usernames = 'ChelseaFC,ManUtd', format = 'detailed'))
-# print(cbind(result$data$name, result$data$stats))
+twitter_oauth2() # one-time run for authentication
+result <- generic_api_call(api = 'https://api.twitter.com/labs/1/users', param_list = list(usernames = 'ChelseaFC,ManUtd', format = 'detailed'))
+print(cbind(result$data$name, result$data$stats))
 
 # makes the call 'curl -X GET -H "Authorization: Bearer <BEARER_TOKEN>" "https://api.twitter.com/labs/1/users?usernames=ChelseaFC,ManUtd&format=detailed"'
 # parameter options can be found at https://developer.twitter.com/en/docs/labs/tweets-and-users/api-reference/get-users-v1

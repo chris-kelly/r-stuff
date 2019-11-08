@@ -4,12 +4,14 @@
 \alias{twitter_oauth2}
 \title{Authenticate Twitter session using OAuth 2.0}
 \usage{
-twitter_oauth2(consumer_api_key, consumer_secret_api_key)
+
+  twitter_oauth2(consumer_api_key = Sys.getenv("TWITTER_CONSUMER_API_KEY"),
+  consumer_secret_api_key = Sys.getenv("TWITTER_CONSUMER_SECRET_API_KEY"))
 }
 \arguments{
-\item{consumer_api_key}{String. The consumer api key provided for using your app}
+\item{consumer_api_key}{String. The consumer api key provided for using your app. Default = Sys.getenv('TWITTER_CONSUMER_API_KEY')}
 
-\item{consumer_secret_api_key}{String. The consumer api secret key provided for using your app}
+\item{consumer_secret_api_key}{String. The consumer api secret key provided for using your app. Default = Sys.getenv('TWITTER_CONSUMER_SECRET_API_KEY')}
 }
 \description{
 This function creates a hidden environment that holds the authentication token required for making calls to the Twitter API.
@@ -20,6 +22,7 @@ You can find your approved apps at \url{https://developer.twitter.com/en/apps/} 
 This function is called when running other functions (such as \code{\link{generic_api_call}})
 }
 \examples{
+twitter_oauth2() # by default,
 # twitter_oauth2('<YOUR API KEY>', '<YOUR SECRET API KEY>') # Not run - input your own api keys
 
 }

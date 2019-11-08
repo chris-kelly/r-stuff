@@ -15,10 +15,11 @@
 #' @description
 #' This function creates a hidden environment that holds the authentication token required for making calls to the Twitter API.
 #'
-#' @param consumer_api_key String. The consumer api key provided for using your app
-#' @param consumer_secret_api_key String. The consumer api secret key provided for using your app
+#' @param consumer_api_key String. The consumer api key provided for using your app. Default = Sys.getenv('TWITTER_CONSUMER_API_KEY')
+#' @param consumer_secret_api_key String. The consumer api secret key provided for using your app. Default = Sys.getenv('TWITTER_CONSUMER_SECRET_API_KEY')
 #'
 #' @examples
+#' twitter_oauth2() # by default,
 #' # twitter_oauth2('<YOUR API KEY>', '<YOUR SECRET API KEY>') # Not run - input your own api keys
 #'
 #' @details
@@ -32,7 +33,8 @@
 #'
 #' @export
 
-twitter_oauth2 <- function(consumer_api_key, consumer_secret_api_key) {
+twitter_oauth2 <- function(consumer_api_key = Sys.getenv('TWITTER_CONSUMER_API_KEY')
+                           , consumer_secret_api_key = Sys.getenv('TWITTER_CONSUMER_SECRET_API_KEY')) {
 
   ## Check if hidden twitter environment exists
   if(!(exists('.env_twitter') & is.character(consumer_api_key) & is.character(consumer_secret_api_key))) {
@@ -74,10 +76,9 @@ twitter_oauth2 <- function(consumer_api_key, consumer_secret_api_key) {
 #'
 #' @examples
 #'
-#' # (Examples not run due to need for authentication)
-#'
-#' # result <- generic_api_call(api = 'https://api.twitter.com/labs/1/users', param_list = list(usernames = 'ChelseaFC,ManUtd', format = 'detailed'))
-#' # print(cbind(result$data$name, result$data$stats))
+#' twitter_oauth2() # one-time run for authentication
+#' result <- generic_api_call(api = 'https://api.twitter.com/labs/1/users', param_list = list(usernames = 'ChelseaFC,ManUtd', format = 'detailed'))
+#' print(cbind(result$data$name, result$data$stats))
 #'
 #' # makes the call 'curl -X GET -H "Authorization: Bearer <BEARER_TOKEN>" "https://api.twitter.com/labs/1/users?usernames=ChelseaFC,ManUtd&format=detailed"'
 #' # parameter options can be found at https://developer.twitter.com/en/docs/labs/tweets-and-users/api-reference/get-users-v1
@@ -131,17 +132,18 @@ generic_api_call <- function(api = 'https://api.twitter.com/labs/1/users'
 #'
 #' @examples
 #' # (Examples not run due to need for authentication)
+#' twitter_oauth2() # one-time run for authentication
 #'
 #' # (Standard): Recent tweets per user (200 per request, but 3200 available to scrape)
-#' # api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
-#' # params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
-#' # result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
+#' api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
+#' params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
+#' result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
 #' # Gets the most recent 1000 tweets from  user "ChelseaFC"
 #'
 #' # (Premium): Search tweets
-#' # api_2 <- 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json' # note this app already has a sandbox environment set up, called 'development'
-#' # params_2 <- list(query = 'from:ChelseaFC', maxResults = 100, toDate = format(Sys.Date(), '%Y%m%d%H%M'), fromDate = format(Sys.Date()-365, '%Y%m%d%H%M'))
-#' # result_2 <-  generic_loop_api_call(key_to_iterate_to = 'next', value_iteration_operation = 'min(`next`)', loops = 2, api = api_2, param_list = params_2)
+#' api_2 <- 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json' # note this app already has a sandbox environment set up, called 'development'
+#' params_2 <- list(query = 'from:ChelseaFC', maxResults = 100, toDate = format(Sys.Date(), '%Y%m%d%H%M'), fromDate = format(Sys.Date()-365, '%Y%m%d%H%M'))
+#' result_2 <-  generic_loop_api_call(key_to_iterate_to = 'next', value_iteration_operation = 'min(`next`)', loops = 2, api = api_2, param_list = params_2)
 #' # Gets the most relevant 200 tweets when searching using operator "from:ChelseaFC"
 #'
 #' @details

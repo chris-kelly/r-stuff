@@ -36,17 +36,18 @@ See \href{https://developer.twitter.com/en/docs/tweets/timelines/guides/working-
 }
 \examples{
 # (Examples not run due to need for authentication)
+twitter_oauth2() # one-time run for authentication
 
 # (Standard): Recent tweets per user (200 per request, but 3200 available to scrape)
-# api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
-# params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
-# result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
+api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
+params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
+result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
 # Gets the most recent 1000 tweets from  user "ChelseaFC"
 
 # (Premium): Search tweets
-# api_2 <- 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json' # note this app already has a sandbox environment set up, called 'development'
-# params_2 <- list(query = 'from:ChelseaFC', maxResults = 100, toDate = format(Sys.Date(), '\%Y\%m\%d\%H\%M'), fromDate = format(Sys.Date()-365, '\%Y\%m\%d\%H\%M'))
-# result_2 <-  generic_loop_api_call(key_to_iterate_to = 'next', value_iteration_operation = 'min(`next`)', loops = 2, api = api_2, param_list = params_2)
+api_2 <- 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json' # note this app already has a sandbox environment set up, called 'development'
+params_2 <- list(query = 'from:ChelseaFC', maxResults = 100, toDate = format(Sys.Date(), '\%Y\%m\%d\%H\%M'), fromDate = format(Sys.Date()-365, '\%Y\%m\%d\%H\%M'))
+result_2 <-  generic_loop_api_call(key_to_iterate_to = 'next', value_iteration_operation = 'min(`next`)', loops = 2, api = api_2, param_list = params_2)
 # Gets the most relevant 200 tweets when searching using operator "from:ChelseaFC"
 
 }

@@ -11,7 +11,8 @@ require(logging)
 
 ## AUTHENTICATION
 
-twitter_oauth2 <- function(consumer_api_key, consumer_secret_api_key) {
+twitter_oauth2 <- function(consumer_api_key = Sys.getenv('TWITTER_CONSUMER_API_KEY')
+                           , consumer_secret_api_key = Sys.getenv('TWITTER_CONSUMER_SECRET_API_KEY')) {
 
   ## Check if hidden twitter environment exists
   if(!(exists('.env_twitter') & is.character(consumer_api_key) & is.character(consumer_secret_api_key))) {
