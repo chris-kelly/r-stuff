@@ -39,3 +39,16 @@ print(cbind(result$data$name, result$data$stats))
 # 2 Manchester United        20529473             127       55902        21979
 ```
 
+## Looping API call
+
+Twitter has request limits for each API call. For example, you might want the most recent 1000 requests for a user, but the recent tweets by user API is limited at 200 tweets per request (see get-statuses-user_timeline).
+
+To help with this, after the first call is sent, twitter gives back some information that informs what parameter the next api call should use to retrieve the next set (e.g. for tweets 201-400, take the the minimum id recieved in the previous call minus one, and set the max_id parameter to that). 
+This function automatically takes that information sent back, evaluates the operation specified for value_iteration_operation and applies that into the next API call under the key in key_to_iterate_to
+
+```
+# Gets the most recent 1000 tweets from  user "ChelseaFC"
+api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
+params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
+result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
+```
