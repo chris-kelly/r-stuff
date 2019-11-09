@@ -2,7 +2,7 @@
 
 This is an R package holding functions to make requests to the twitter API.
 
-To use the twitter api, you will need to a twitter-approved account with an app (that has both an api key and a secret api key). You can find your approved apps at https://developer.twitter.com/en/apps/ (if you are logged in).
+To use the twitter api, you will need a twitter-approved account with an app (that has both an api key and a secret api key). You can find your approved apps at https://developer.twitter.com/en/apps/ (if you are logged in).
 
 ## Installation
 
