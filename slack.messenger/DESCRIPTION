@@ -1,0 +1,12 @@
+Package: slack.messenger
+Type: Package
+Title: Sends slack messages using webhook
+Version: 1.0.0
+Author: Chris Kelly
+Maintainer: Chris Kelly <chris_kelly@live.co.uk>
+Description: Writes slack messages to individuals and public channels
+License: NA
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1.9000
+Depends: httr, jsonlite
