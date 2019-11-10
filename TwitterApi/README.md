@@ -6,7 +6,7 @@ To use the twitter api, you will need a twitter-approved account with an app (th
 
 ## Installation
 
-To install, use the `remotes` package:
+To install from github, use the `remotes` package:
 
 ```
 remotes::install_github('chris-kelly/r-stuff/TwitterApi')

@@ -4,6 +4,15 @@ This is an R package holding functions to Send messages via incoming webhook to 
 
 To use the package, you will need an incoming webhook setup of slack. You can do this by following the steps listed <a href="https://slack.com/intl/en-gb/help/articles/115005265063-incoming-webhooks-for-slack">on the slack website</a>
 
+## Installation
+
+To install from github, use the `remotes` package:
+
+```
+remotes::install_github('chris-kelly/r-stuff/TwitterApi')
+```
+
+
 ## Sending a message
 
 Once you have your webhook set up on slack, writing messages from R is as easy as: 
