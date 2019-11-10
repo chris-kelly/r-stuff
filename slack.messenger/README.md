@@ -9,9 +9,8 @@ To use the package, you will need an incoming webhook setup of slack. You can do
 To install from github, use the `remotes` package:
 
 ```
-remotes::install_github('chris-kelly/r-stuff/TwitterApi')
+remotes::install_github('chris-kelly/r-stuff/slack.messenger')
 ```
-
 
 ## Sending a message
 
@@ -66,4 +65,4 @@ write_to_slack(param_list = param_list)
 
 <img src="https://raw.githubusercontent.com/chris-kelly/r-stuff/master/slack.messenger/inst/readme_pics/Picture_4.png"></img>
 
-You can concatenate this into any message using `paste0()`
+You can concatenate this out into any message, e.g. `param_list$text = paste0('Here are your coefficients', sum_lm)`
