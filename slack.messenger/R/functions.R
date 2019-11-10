@@ -103,7 +103,9 @@ write_to_slack <- function(url = Sys.getenv('SLACK_WEBHOOK_URL')
 #' @examples
 #' df <- data.frame(a = 1:5, d = 96:100)
 #' print_df <- capture_r_output(df)
-#' write_to_slack(param_list = list(text = print_df, channel = '@chris.kelly'))
+#' param_list <- list(username = 'Name of bot', channel = '@chris.kelly', icon_emoji = ':call_me_hand:')
+#' param_list$text <- print_df
+#' write_to_slack(param_list = param_list)
 #'
 #' @return A string that is compatible with sending R outputs in slack messages
 #' @keywords slack
@@ -116,4 +118,3 @@ capture_r_output <- function(print_object) {
   print_df <- paste0('```\n', print_df, '\n```')
   return(print_df)
 }
-

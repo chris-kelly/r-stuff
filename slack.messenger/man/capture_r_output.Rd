@@ -18,7 +18,9 @@ Function to capture R outputs to send them as slack messages
 \examples{
 df <- data.frame(a = 1:5, d = 96:100)
 print_df <- capture_r_output(df)
-write_to_slack(param_list = list(text = print_df, channel = '@chris.kelly'))
+param_list <- list(username = 'Name of bot', channel = '@chris.kelly', icon_emoji = ':call_me_hand:')
+param_list$text <- print_df
+write_to_slack(param_list = param_list)
 
 }
 \keyword{slack}
