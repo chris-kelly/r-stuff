@@ -65,4 +65,4 @@ write_to_slack(param_list = param_list)
 
 <img src="https://raw.githubusercontent.com/chris-kelly/r-stuff/master/slack.messenger/inst/readme_pics/Picture_4.png"></img>
 
-You can concatenate this out into any message, e.g. `param_list$text = paste0('Here are your coefficients', sum_lm)`
+You can concatenate this out into any message, e.g. `param_list$text = paste0('Here are your coefficients: ', sum_lm)`
