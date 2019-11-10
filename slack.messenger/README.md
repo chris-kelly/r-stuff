@@ -1,15 +1,22 @@
 # slack.messenger
 
-Send messages via incoming webhook to slack users or channels
+This is an R package holding functions to Send messages via incoming webhook to slack users or channels.
 
-Once you have your webhook set up on slack (<a href="https://slack.com/intl/en-gb/help/articles/115005265063-incoming-webhooks-for-slack">see this link"</a>), writing messages from R is as easy as: 
+To use the package, you will need an incoming webhook setup of slack. You can do this by following thse steps: <a href="https://slack.com/intl/en-gb/help/articles/115005265063-incoming-webhooks-for-slack">see this link"</a>
+
+## Sending a message
+
+Once you have your webhook set up on slack (), writing messages from R is as easy as: 
 
 ```
 write_to_slack(param_list = list(text = 'Hello world', channel = '#slackR'))
 ```
+
 <img src="https://raw.githubusercontent.com/chris-kelly/r-stuff/master/slack.messenger/inst/readme_pics/Picture_3.png"></img>
 
 (By default, the `write_to_slack()` function uses the URL loaded as the environment variable `SLACK_WEBHOOK_URL`, but you can specify this manually in the function)
+
+## Adding custom parameters
 
 The parameter list is flexible, and can accomdate attachments too, e.g.:
 
@@ -35,6 +42,8 @@ write_to_slack(param_list = param_list)
 ```
 
 <img src="https://raw.githubusercontent.com/chris-kelly/r-stuff/master/slack.messenger/inst/readme_pics/Picture_2.png"></img>
+
+## Capturing printed output and printing nicely
 
 As well as the `link()` function in the example above, this package also has a helper function `capture_r_output` to capture any r output printed to the console as convert to slack message format:
 
