@@ -56,3 +56,5 @@ write_to_slack(param_list = param_list)
 ```
 
 <img src="https://raw.githubusercontent.com/chris-kelly/r-stuff/master/slack.messenger/inst/readme_pics/Picture_4.png"></img>
+
+You can concatenate this into any message using `paste0()`
