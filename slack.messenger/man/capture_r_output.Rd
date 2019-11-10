@@ -16,10 +16,10 @@ A string that is compatible with sending R outputs in slack messages
 Function to capture R outputs to send them as slack messages
 }
 \examples{
-df <- data.frame(a = 1:5, d = 96:100)
-print_df <- capture_r_output(df)
+sum_lm <- summary(lm(dist ~ speed, data=cars))
+sum_lm <- capture_r_output(sum_lm)
 param_list <- list(username = 'Name of bot', channel = '@chris.kelly', icon_emoji = ':call_me_hand:')
-param_list$text <- print_df
+param_list$text <- sum_lm
 write_to_slack(param_list = param_list)
 
 }
