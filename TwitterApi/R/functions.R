@@ -5,6 +5,7 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom logging loginfo logerror
 #' @importFrom utils URLencode
+#' @importFrom bit64 as.integer64
 
 ####################
 ## AUTHENTICATION
@@ -126,6 +127,8 @@ generic_api_call <- function(api = 'https://api.twitter.com/labs/1/users'
 #' @param param_list List. List of keys and values to provide as parameters to the first API call. See details.
 #' @param key_to_iterate_to String. The key of the parameter to assign the new looped value to.
 #' @param value_iteration_operation String. The operation to apply to give the value for the iteration operation.
+#' @param retry_sleep Number. The amount of time to wait before retrying call if errors found when calling (due to request wait limits). Default = NA (do not retry call)
+#' @param max_retries Number of times to retry the API call after waiting before stopping
 #' @param loops Integer. Number of loops to run before stopping.
 #'
 #' @return List of looped results from the API call
@@ -137,7 +140,7 @@ generic_api_call <- function(api = 'https://api.twitter.com/labs/1/users'
 #' # (Standard): Recent tweets per user (200 per request, but 3200 available to scrape)
 #' api_1 <- 'https://api.twitter.com/1.1/statuses/user_timeline.json'
 #' params_1 <- list(screen_name = 'ChelseaFC', count = 200, tweet_mode = 'extended')
-#' result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'min(id)-1', loops = 5, api = api_1, param_list = params_1)
+#' result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id', value_iteration_operation = 'toString(as.integer64(min(id)-1))', loops = 5, api = api_1, param_list = params_1)
 #' # Gets the most recent 1000 tweets from  user "ChelseaFC"
 #'
 #' # (Premium): Search tweets
@@ -164,11 +167,23 @@ generic_loop_api_call <- function(api = 'https://api.twitter.com/1.1/statuses/us
                                                       , count = 200
                                                       , tweet_mode = 'extended')
                                   , key_to_iterate_to = 'max_id'
-                                  , value_iteration_operation = 'min(id)-1'
+                                  , value_iteration_operation = 'toString(bit64::as.integer64(min(id)-1))'
+                                  , retry_sleep = NA
+                                  , max_retries = 15
                                   , loops = 5) {
   result_list <- list()
   for(i in 1:loops) {
-    result_list[[paste0('loop_',i)]] <- generic_api_call(api = api, param_list = param_list)
+    result <- generic_api_call(api = api, param_list = param_list)
+    if(!is.na(retry_sleep)) {
+      j <- 1
+      while('errors' %in% names(call) & j <= max_retries) {
+        loginfo('Request limit exceeded, waiting 60s')
+        Sys.sleep(retry_sleep)
+        result <- generic_api_call(api = api, param_list = param_list)
+        j <- j+1
+      }
+    }
+    result_list[[paste0('loop_',i)]] <- result
     param_list[[key_to_iterate_to]] <- eval(parse(text = paste0("with(result_list[[paste0('loop_',i)]], "
                                                                   , value_iteration_operation
                                                                   , ")")))

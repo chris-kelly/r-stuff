@@ -3,6 +3,7 @@
 export(generic_api_call)
 export(generic_loop_api_call)
 export(twitter_oauth2)
+importFrom(bit64,as.integer64)
 importFrom(jsonlite,fromJSON)
 importFrom(logging,logerror)
 importFrom(logging,loginfo)
