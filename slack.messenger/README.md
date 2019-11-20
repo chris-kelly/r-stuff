@@ -2,7 +2,7 @@
 
 This is an R package holding functions to Send messages via incoming webhook to slack users or channels.
 
-To use the package, you will need an incoming webhook setup of slack. You can do this by following the steps listed <a href="https://slack.com/intl/en-gb/help/articles/115005265063-incoming-webhooks-for-slack">on the slack website</a>
+To use the package, you will need an incoming webhook setup for slack. You can do this by following the steps listed <a href="https://slack.com/intl/en-gb/help/articles/115005265063-incoming-webhooks-for-slack">on the slack website</a>
 
 ## Installation
 
