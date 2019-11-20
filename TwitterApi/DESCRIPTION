@@ -1,7 +1,7 @@
 Package: TwitterApi
 Type: Package
 Title: Twitter Api Package
-Version: 0.1.0
+Version: 1.0.0
 Author: Chris Kelly
 Maintainer: The package maintainer <chris_kelly@live.co.uk>
 Description: Package for calling twitter APIs.
@@ -9,4 +9,4 @@ License: Free to distribute
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Depends: jsonlite, logging, utils, bit64
+Depends: jsonlite, logging, utils, bit64, leaflet, shiny, DT, plotly

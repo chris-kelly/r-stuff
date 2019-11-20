@@ -6,6 +6,7 @@
 #' @importFrom logging loginfo logerror
 #' @importFrom utils URLencode
 #' @importFrom bit64 as.integer64
+#' @importFrom leaflet leaflet addTiles addMarkers markerClusterOptions
 
 ####################
 ## AUTHENTICATION
@@ -190,5 +191,129 @@ generic_loop_api_call <- function(api = 'https://api.twitter.com/1.1/statuses/us
     loginfo(paste0('Loop ', i, ' complete'))
   }
   return(result_list)
+}
+
+####################
+## GENERIC LOCATION RETRIEVAL
+####################
+
+#' @title Find geo-locations searched from a string
+#'
+#' @description
+#' This uses the free api from locationIQ. It is free to get a token and make a call to this API without the need for approval.
+#' (Note the rate limit for this API is 2 seconds)
+#'
+#' @param string String. The string to search in the API. Default = "Lagos, Nigeria"
+#' @param token String. The token to use to make the API call. Default = Sys.getenv('TWITTER_CONSUMER_API_KEY')
+#'
+#' @return Dataframe of the response from the API.
+#'
+#' @examples
+#' response <- geocode_request('Big Ben, London')
+#'
+#' @details
+#' Most twitter users haven't opted in to using location data for their tweets, but many have location descriptions.
+#' This function is a helper to scrape those locations.
+#'
+#' @seealso
+#' Visit \href{https://locationiq.com/register}{LocationIQ website} to sign up for a free token.
+#'
+#' @keywords twitter api call generic
+#'
+#' @export
+#'
+
+geocode_request <- function(string = 'Lagos, Nigeria', token = Sys.getenv('LOCATIONIQ_TOKEN')) {
+  if(token == "") {
+    logerror('Token is missing, cannot make call to API.')
+  } else {
+    response <- system(paste0("curl --request GET   --url 'https://us1.locationiq.com/v1/search.php?"
+                              , "key="
+                              , token
+                              , "&q=", URLencode(string)
+                              , "&format=json'")
+                       , intern = T)
+    response <- fromJSON(response)
+    return(response)
+  }
+}
+
+####################
+## GENERIC GEOCODE REQUEST LOOP
+####################
+
+#' @title Find multiple geo-locations from a string
+#'
+#' @description
+#' This uses the free api from locationIQ. Note the rate limit for this API is 2 requests per second.
+#' See \code{\link{geocode_request}}) for more details.
+#'
+#' @param locations Vector of strings. The strings to search in the API. Default = c('London','Manchester')
+#' @param return_map Boolean. Whether to return a map of the collected coordinates or not
+#'
+#' @return Dataframe of the response from the API.
+#'
+#' @examples
+#' twitter_oauth2()
+#' param_list = list(usernames = 'ChelseaFC,ManUtd,LFC,SpursOfficial,Arsenal', format = 'detailed')
+#' result <- generic_api_call(api = 'https://api.twitter.com/labs/1/users', param_list = param_list)
+#' coordinates <- geocode_request_lat_lon_loop(locations = result$data$location, return_map = TRUE)
+#' coordinates$plot # run to see the the plotted results
+#'
+#' @details
+#' Most twitter users haven't opted in to using location data for their tweets, but many have location descriptions.
+#' This function is a helper to locate those users.
+#' Optionally, the function can plot those locations on a map.
+#'
+#' @keywords twitter api call generic
+#'
+#' @export
+
+geocode_request_lat_lon_loop <- function(locations = c('London', 'Manchester')
+                                         , return_map = TRUE
+                                         , token = Sys.getenv('LOCATIONIQ_TOKEN')) {
+  result <- sapply(locations
+                   , FUN = function(x) tryCatch(geocode_request(x,token)[1,c('lat', 'lon')]
+                                                , error = function(e) {
+                                                  tryCatch({Sys.sleep(0.5); geocode_request(x,token)[1,c('lat', 'lon')]}
+                                                           , error = function(e) {data.frame(lat = '', long = '')})
+                                                  })
+                   )
+  lat <- unlist(result[1,]); lon <- unlist(result[2,])
+  lat_lon <- data.frame(Lat = as.numeric(lat), Long = as.numeric(lon), search = locations)
+  if(return_map) {
+    leaflet_plot <- leaflet(data = lat_lon) %>%
+      addTiles() %>%
+      addMarkers(clusterOptions = markerClusterOptions(), label = ~locations)
+    return(list(coordinates = lat_lon, plot = leaflet_plot))
+  } else {
+    return(list(coordinates = lat_lon))
+  }
+}
+
+##########################################
+## Run Shiny App
+##########################################
+
+#' @title Twitter scraping shiny app
+#'
+#' @description
+#' This function runs an example shiny app for twitter scraping.
+#'
+#' @param port Integer: Port to run the shiny app through. Defaults to 5000.
+#' @param host String: IP address to host the shiny app. Defaults to 0.0.0.0.
+#'
+#' @keywords shiny twitter
+#'
+#' @export
+#'
+
+shinyTwitterApp <- function(port = 5000, host = "127.0.0.1") {
+  # return(list.files('inst'))
+  appDir <- system.file('shiny_app.R', package = "TwitterApi")
+  if (appDir == "") {
+    stop("Could not find example directory. Try re-installing `TwitterApi`.", call. = FALSE)
+  }
+  shiny::runApp(appDir, port = port, host = host, display.mode = "normal")
 }
 
