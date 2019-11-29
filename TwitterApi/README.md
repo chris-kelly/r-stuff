@@ -56,3 +56,22 @@ result_1 <-  generic_loop_api_call(key_to_iterate_to = 'max_id'
                                    , api = api_1
                                    , param_list = params_1)
 ```
+
+## Geocoding
+
+Most users do not attach geo-coordinates to their tweets/have not opted in the provide geo-location data.
+Some user do have a 'location' in their description field though, although this is free text and not very useful.
+To help combat this, the package can make API calls to <a href="https://locationiq.com/">LocationIQ</a> (a free service to register a token for).
+As a bonus, a map of all the geo-locations obtained can also be plotted using the <a href="https://rstudio.github.io/leaflet/map_widget.html">leaflet package</a> using this function.
+
+```
+# simple example
+example_1 <- geocode_request(string = "Lagos, Nigeria")
+
+# map plot of multiple locations
+param_list = list(usernames = 'ChelseaFC,ManUtd,LFC,SpursOfficial,Arsenal', format = 'detailed')
+result <- generic_api_call(api = 'https://api.twitter.com/labs/1/users', param_list = param_list)
+coordinates <- geocode_request_lat_lon_loop(locations = result$data$location, return_map = TRUE)
+coordinates$plot # run to see the the plotted results
+```
+

@@ -218,9 +218,11 @@ server <- function(input, output) {
         user_ids <- generic_api_call(api = 'https://api.twitter.com/1.1/statuses/retweeters/ids.json'
                                      , param_list = list(id = bit64::as.integer64(input$retweeters)
                                                          , count = 100))
+        print(names(user_ids))
         retweets <- generic_api_call(api = 'https://api.twitter.com/1.1/users/lookup.json'
                                      , param_list = list(user_id = paste0(user_ids$ids, collapse = ',')
                                                          , include_entities = 'true'))
+        print(names(retweets))
         result <- cbind(retweets[,c("screen_name"
                                     , "location"
                                     , "followers_count"
@@ -231,6 +233,8 @@ server <- function(input, output) {
                         )
         retweet_result <- result
         locations <- retweet_result$location[retweet_result$location != ""]
+        print(locations[1:5])
+        print(input$loc_token)
         coordinates <- tryCatch({geocode_request_lat_lon_loop(locations
                                                               , return_map = T
                                                               , token = input$loc_token);}

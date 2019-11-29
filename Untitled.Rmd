@@ -1,0 +1,60 @@
+---
+title: "Maximum Likelihood Estimation"
+output: html_notebook
+---
+
+This is a notebook to show how the coefficients for logit are derived
+
+$$
+P(y|\beta) = P(y_1, y_2,...,y_n|\beta) = \prod_{y=1}P(y_i)^{y} \times \prod_{y=0}(1-P(y_i))^{1-y}
+$$
+Assume $P(y)$ is predicted using a logistic function, in this case termed $P(y|\beta)=\Lambda(X'\beta)=(1+e^{-X'\beta})^{-1}$
+
+Then we can use the log likelihood to change from product to sum:
+
+$$
+\prod_{y=1} \Lambda(X'\beta)^{y} \times \prod_{y=0}(1-X'\beta)^{1-y} \\
+= \sum{\text{log}(\Lambda(X'\beta)^{y})} + \sum{\text{log}(\Lambda(1-X'\beta)^{1-y})} \\
+= \sum_{i=1}^{n}{y\text{log}(\Lambda(X'\beta)) + (1-y)\text{log}(\Lambda(1-X'\beta))}
+$$
+Which as a sum is now easier to differentiate to get the coefficients:
+
+$$
+\frac{\partial}{\partial\beta_j}P(y|\beta) \\
+=\frac{\partial}{\partial\beta_j}\sum{y\text{log}(\Lambda(X'\beta)) + (1-y)\text{log}(\Lambda(1-X'\beta))} \\
+=\sum_{i=1}^{n}{y\frac{\frac{\partial}{\partial\beta_j}\Lambda(X'\beta)}{\Lambda(X'\beta)} + (1-y)\frac{\frac{\partial}{\partial\beta_j}\Lambda(X'\beta)}{\Lambda(X'\beta)}}
+$$
+
+Which you can simplify in the following way using the logistic function:
+
+$$
+\frac{\partial}{\partial\beta_j}\Lambda(X'\beta)
+= \frac{\partial}{\partial\beta_j}(1+e^{-X'\beta})^{-1} \\
+= -1(1+e^{-X'\beta})^{-2} \times -x_je^{-X\beta} \\
+= \frac{x_je^{-X\beta}}{(1+e^{-X'\beta})^{2}} \\
+= x_{j}\left[\frac{1}{1+e^{-X'\beta}} \times \frac{e^{-X\beta}}{1+e^{-X'\beta}}\right] \\
+= x_{j}\left[\frac{1}{1+e^{-X'\beta}} \times \left(1-\frac{1}{1+e^{-X'\beta}}\right)\right] \\
+= x_{j}\left[\Lambda(X'\beta)\times\left(1-\Lambda(X'\beta)\right)\right]
+$$
+
+And hence derive the optimal maximum log-likelihood coefficient:
+
+$$
+\frac{\partial}{\partial\beta_j}P(y|\beta) \\
+=\sum_{i=1}^{n}{y\frac{\frac{\partial}{\partial\beta_j}\Lambda(X'\beta)}{\Lambda(X'\beta)}} \\
+=\sum_{i=1}^{n}{y\frac{x_{j}\left[\Lambda(X'\beta)\times\left(1-\Lambda(X'\beta)\right)\right]}{\Lambda(X'\beta)} + 
+(1-y)\frac{x_{j}\left[\Lambda(X'\beta)\times\left(1-\Lambda(X'\beta)\right)\right]}{1-\Lambda(X'\beta)} 
+} \\
+=\sum_{i=1}^{n}{x_{j}\left[y\left(1-\Lambda(X'\beta)\right) + (1-y)\left(\Lambda(X'\beta)\right)\right]}
+$$
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
