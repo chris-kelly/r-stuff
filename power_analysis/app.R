@@ -83,7 +83,7 @@ ui <- fluidPage(
                     , value = 'rbinom(n=100000,size=10,prob=0.2)')
       , textAreaInput('true_dist_2'
                       , 'True variant Distribution'
-                      , value = 'rbinom(n=100000,size=10,prob=0.2)')
+                      , value = 'rbinom(n=100000,size=10,prob=0.21)')
       , selectInput('alternative'
                     , 'Alternative hypothesis'
                     , choices = c("two sided", "less", "greater")
@@ -107,8 +107,8 @@ ui <- fluidPage(
       HTML(markdown::markdownToHTML(text = 
                                       "It's a bit slow to run the first time, be patient...
                    <ul>
-                        <li>The default inputs give an example to show type 1 error (no true difference in means).</li>
-                        <li>Try `rbinom(n=100000,size=10,prob=0.21)` to observe type 2 error.</li>
+                        <li>The default inputs give an example to show type 2 error.</li>
+                        <li>Try `rbinom(n=100000,size=10,prob=0.2)` to observe type 1 error (no true difference in means).</li>
                         <li>Vary other parameters (other distibutions, sample sizes, accepted type 1 error etc.) to see how it impacts power.</li>
                    </ul>"
       ))
