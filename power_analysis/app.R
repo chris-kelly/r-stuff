@@ -104,11 +104,19 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      
-      plotlyOutput('true_dist')
+      HTML(markdown::markdownToHTML(text = 
+                                      "It's a bit slow to run the first time, be patient...
+                   <ul>
+                        <li>The default inputs give an example to show type 1 error (no true difference in means).</li>
+                        <li>Try `rbinom(n=100000,size=10,prob=0.21)` to observe type 2 error.</li>
+                        <li>Vary other parameters (other distibutions, sample sizes, accepted type 1 error etc.) to see how it impacts power.</li>
+                   </ul>"
+      ))
+      , plotlyOutput('true_dist')
       , br()
       , HTML(markdown::markdownToHTML(text = 
-                                        'Two factors from the control and variant distributions impact whether an effect is detected: 
+              '**Analysing the variant and control distributions:** <br>
+               Two factors from the control and variant distributions impact whether an effect is detected: 
                    <ul>
                         <li>The difference in the means of the two distributions ($X_1$ and $X_2$)</li>
                         <li>The variability (standard deviation) of the two distributions ($\\sigma_1$ and $\\sigma_2$)</li>
@@ -120,7 +128,7 @@ ui <- fluidPage(
       , br()
       , br()
       , HTML(markdown::markdownToHTML(text = 
-                                        "Lets say we take many samples (as per the 'frequentist' paradigm):"
+                                        "Lets say we take many samples (as per the 'frequentist' paradigm) and take the mean each time:"
       ))
       , br()
       , br()
@@ -129,8 +137,8 @@ ui <- fluidPage(
       , HTML(markdown::markdownToHTML(text = 
                                         "Note two things (as per the central limit theorem):
                 <ul>
-                    <li>The sample distributions have the same averages as the means of the true distributions (as per the central limit theorem).<br></li>
-                    <li>The sample distributions follow a normal distribution (even though the distributions they are sampling from might be non-normal)<br></li>
+                    <li>The sample mean distributions have the same averages as the means of the true distributions (as per the central limit theorem).<br></li>
+                    <li>The sample mean distributions follow a normal distribution (even though the distributions they are sampling from might be non-normal)<br></li>
                 </ul>
                 This allows us to exploit what we know about the normal distribution to determine if there is a difference between test and control.<br><br>
                 We now note one further factor during sampling impacts whether an effect is detected:
@@ -148,7 +156,7 @@ ui <- fluidPage(
                                         "Finally, we compare how frequently the difference in sample means appears signficant. We need to compare how  different the sample means were, while taking into account the random error involved in sampling.<br>
               To do this, we create a Z statistic that follows a normal distribution with mean of 0 and standard deviation of 1: <br>
               $$
-              Z=\\frac{X_1-X_2}{\\sqrt{\\sigma_1^2+\\sigma_2^2}}\\sim N(0,1)
+              Z=\\frac{X_1-X_2}{\\sqrt{SE_1^2+SE_2^2}}\\sim N(0,1)
               $$
               If we compute the Z statistic for every simulated sample, then we would derive the plot below:
               "
@@ -159,7 +167,7 @@ ui <- fluidPage(
       , HTML(markdown::markdownToHTML(text = 
                                         "If there is no difference in the means of the control and variant distributions, we expect the proportion of results that were statistically significant to be equal to the defined type 1 error, $\\alpha$ (the false positive rate). <br><br>
              However, if there is a difference in the means of the two distributions, then the proportion of false negatives from our simulated samples is defined as the type 2 error, $\\beta$. <br>
-             The power is defined as the likelihood of detecting an effect as statistically significant given there is a genuine difference (hence is $1-\\beta$)
+             The power is defined as the likelihood of detecting an effect as statistically significant given there is a genuine difference (hence is $1-\\beta$). As a rule of thumb, experiments aim for the power to be 80%.
              "
       ))
       , DT::DTOutput('Z_test_summary')
