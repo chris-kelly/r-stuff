@@ -26,23 +26,30 @@ cleanup <- function(a,cs,potential_numbers=1:9) {
   return(a)
 }
 
+
+
 ## If only one potential number available, set matrix 10 cell to it
-only_option_for_cell_so_update_matrix10 <- function(a,cs,potential_numbers=1:9) {
-  for(j in 1:9) {
-    for(i in 1:9) {
+only_option_for_cell_so_update_matrix10 <- function(a,cs,target_row=1:9,target_col=1:9,potential_numbers=1:9) {
+  updates <- list()
+  for(j in target_col) {
+    for(i in target_row) {
       if(sum(a[i,j,1:9] != 0) == 1) {
         a[i,j,] <- c(rep(0), max(a[i,j,]))
         a <- cleanup(a,cs,potential_numbers)
         # Message
         relevant_constraints <- cs[apply(sapply(cs, function(x) x[,1] == i & x[,2] == j),2,sum)>0]
         coords <- sapply((1:9)[!(1:9 %in% a[i,j,10])], function(x) do.call(rbind, relevant_constraints)[match(x, a[cbind(do.call(rbind, relevant_constraints),10)]),])
-        print(paste0('Cell ', i, ',', j, ' filled with ', a[i,j,10], ' (since '
-                     , paste0((1:9)[!(1:9 %in% a[i,j,10])],' is in [', apply(coords,2,FUN=function(x) paste0(x,collapse=',')),'], ',collapse='')
-                     ,')', collapse = ''))
+        cell_updates <- list(i = i, j = j, value = a[i,j,10], constraints = t(coords),
+                             message = paste0('Cell ', i, ',', j, ' filled with ', a[i,j,10], ' (since '
+                                              , paste0((1:9)[!(1:9 %in% a[i,j,10])],' is in [', apply(coords,2,FUN=function(x) paste0(x,collapse=',')),'], ',collapse='')
+                                              ,')', collapse = ''))
+        updates[[paste0(i,j)]] <- cell_updates
+        print(cell_updates$message)
       }
     }
   }
   return(a)
+  # return(list(sudoku3d = a, matrix_updated = updates))
 }
 
 ## If only potential number possible within a constraint, set matrix 10 cell to it
@@ -53,7 +60,10 @@ only_option_in_constraint_so_update_matrix10 <- function(a,cs,potential_numbers=
         a[cbind(i,10)][which.max(a[cbind(i,k)])] <- k
         # Message
         pos <- which.max(a[cbind(i,k)])
-        print(paste0('Cell ', i[pos,1], ',', i[pos,2], ': filled with ', k, ' as no other cells can be ', k, ' in the same constraint (', paste0('[',i[,1],',',i[,2],']',collapse=' '), ')'))
+        message <- paste0('Cell ', i[pos,1], ',', i[pos,2], ': filled with ', k
+                          , ' as no other cells can be ', k, ' in the same constraint ('
+                          , paste0('[',i[,1],',',i[,2],']',collapse=' '), ')')
+        print(message)
       }
       a <- cleanup(a,cs,potential_numbers)
     }
@@ -152,7 +162,10 @@ cs <- list(
 counter = 1
 a <- cleanup(a,cs)
 
-print(counter)
+# quick_solve <- function(x) {
+#   
+# }
+
 a <- only_option_for_cell_so_update_matrix10(a,cs)
 a <- only_option_in_constraint_so_update_matrix10(a,cs)
 a <- eliminate_candidates_by_restricted_combinations(a,cs,2)
